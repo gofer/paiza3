@@ -1,0 +1,49 @@
+#!/bin/sh
+
+TARGET=paiza.exe
+i=2
+
+TIMEOUT=timeout
+TIMEOUTFLAGS=3s
+
+RESOURCE_DIR=resource
+
+INPUT_FILE_PREFIX=${RESOURCE_DIR}/input
+INPUT_FILE_SUFFIX=.txt
+
+OUTPUT_FILE_PREFIX=output
+OUTPUT_FILE_SUFFIX=.txt
+
+ANSWER_FILE_PREFIX=${RESOURCE_DIR}/ans
+ANSWER_FILE_SUFFIX=.txt
+
+FG_GREEN="\033[32m"
+FG_RED="\033[31m"
+FG_YELLOW="\033[33m"
+FG_DEFAULT="\033[0m"
+
+cols=`tput cols`
+
+for i in `seq 1 $i`;
+do
+	INPUT_FILE="${INPUT_FILE_PREFIX}$i${INPUT_FILE_SUFFIX}"
+	OUTPUT_FILE="${OUTPUT_FILE_PREFIX}$i${OUTPUT_FILE_SUFFIX}"
+	ANSWER_FILE="${ANSWER_FILE_PREFIX}$i${ANSWER_FILE_SUFFIX}"
+	
+	echo "${TIMEOUT} ${TIMEOUTFLAGS} ./${TARGET} < ${INPUT_FILE} > ${OUTPUT_FILE}"
+	${TIMEOUT} ${TIMEOUTFLAGS} ./${TARGET} < ${INPUT_FILE} > ${OUTPUT_FILE}
+	d=`diff ${OUTPUT_FILE} ${ANSWER_FILE} | wc -c`
+	
+	CASESTR=`printf "Test case #%02d:" $i`
+	l=`echo ${CASESTR} | wc -c`
+	l=`expr ${cols} - $l`
+	echo -ne ${CASESTR}
+	if [ $d -eq 0 ];
+	then
+		s=`printf "%${l}s\n" "[ ${FG_GREEN}OK${FG_DEFAULT} ]"`
+		echo -e "$s"
+	else
+		s=`printf "%${l}s\n" "[ ${FG_RED}NG${FG_DEFAULT} ]"`
+		echo -e "$s"
+	fi
+done
