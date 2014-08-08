@@ -1,7 +1,7 @@
-CC      = gcc
-CCFLAGS = -std=c++1y -O3 -I.
-LD      = $(CC)
-LDFLAGS = -L. -lstdc++
+CXX      = g++
+CXXFLAGS = -std=c++1y -O3 -I.
+LD       = $(CXX)
+LDFLAGS  = -L. -lstdc++
 
 SRCS    = paiza3.cc
 OBJS    = $(subst .cc,.o,$(SRCS))
@@ -12,9 +12,9 @@ $(TARGET): $(OBJS)
 
 .SUFFIXES:	.cc .cpp
 .cc.o:
-	$(CC) $(CCFLAGS) -c $<
+	$(CXX) $(CXXFLAGS) -c $<
 .cpp.o:
-	$(CC) $(CCFLAGS) -c $<
+	$(CXX) $(CXXFLAGS) -c $<
 
 .PHONY: check
 check: $(TARGET)
